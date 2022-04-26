@@ -13,6 +13,7 @@ config(); //Read .env file lines as though they were env vars.
 // { rejectUnauthorized: false } - when connecting to a heroku DB
 const herokuSSLSetting = { rejectUnauthorized: false }
 const sslSetting = process.env.LOCAL ? false : herokuSSLSetting
+
 const dbConfig = {
   connectionString: process.env.DATABASE_URL,
   ssl: sslSetting,
@@ -27,7 +28,7 @@ const client = new Client(dbConfig);
 client.connect();
 
 app.get("/pastes", async (req, res) => {
-  const dbres = await client.query('select * from pastebin');
+  const dbres = await client.query('select * from pastebin order by timestamp desc limit 10');
   res.json(dbres.rows);
 });
 
@@ -35,7 +36,6 @@ app.post("/pastes", async (req, res) => {
   await client.query('insert into pastebin (content, title) values ($1, $2)', [req.body.content, req.body.title])
   res.json({status: 'success'})
 })
-
 
 //Start the server on the given port
 const port = process.env.PORT;
