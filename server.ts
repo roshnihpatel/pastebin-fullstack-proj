@@ -42,6 +42,22 @@ app.delete("/pastes/:id", async (req, res) => {
   res.json({status: 'success'})
 })
 
+//for comments section
+app.get('/pastes/:pastes_id/comment', async (req, res) => {
+  const data = await client.query('select * from comments where paste_id = $1', [req.params.pastes_id])
+  res.json(data.rows)
+});
+
+app.post('/pastes/:pastes_id/comment', async (req, res) => {
+  await client.query('insert into comments (paste_id, comment, timestamp) values ($1, $2, now())', [req.params.pastes_id, req.body.comment])
+  res.json({status: 'success'})
+});
+
+app.delete('/pastes/:pastes_id/comment/:id', async (req,res) => {
+  await client.query('delete from comments where paste_id = $1 and id = $2' , [req.params.pastes_id, req.params.id])
+  res.json({status: 'success'})
+});
+
 //Start the server on the given port
 const port = process.env.PORT;
 if (!port) {
