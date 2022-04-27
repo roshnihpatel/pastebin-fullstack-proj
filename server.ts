@@ -35,6 +35,11 @@ app.get("/pastes", async (req, res) => {
 app.post("/pastes", async (req, res) => {
   await client.query('insert into pastebin (content, title, timestamp) values ($1, $2, now())', [req.body.content, req.body.title])
   res.json({status: 'success'})
+});
+
+app.delete("/pastes/:id", async (req, res) => {
+  await client.query('delete from pastebin where id = $1', [req.params.id])
+  res.json({status: 'success'})
 })
 
 //Start the server on the given port
