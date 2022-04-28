@@ -31,6 +31,7 @@ client.connect();
 
 app.get("/pastes", async (req, res) => {
   const dbres = await client.query('select * from pastebin order by timestamp desc limit 10');
+  res.set('Access-Control-Allow-Origin', '*')
   res.json(dbres.rows);
 });
 
@@ -43,12 +44,14 @@ app.post("/pastes", async (req, res) => {
 app.delete("/pastes/:id", async (req, res) => {
   await client.query('delete from comments where paste_id = $1', [req.params.id])
   await client.query('delete from pastebin where id = $1', [req.params.id])
+  res.set('Access-Control-Allow-Origin', '*')
   res.json({status: 'success'})
 })
 
 //for comments section
 app.get('/pastes/:pastes_id/comment', async (req, res) => {
   const data = await client.query('select * from comments where paste_id = $1 order by timestamp desc limit 10', [req.params.pastes_id])
+  res.set('Access-Control-Allow-Origin', '*')
   res.json(data.rows)
 });
 
@@ -60,6 +63,7 @@ app.post('/pastes/:pastes_id/comment', async (req, res) => {
 
 app.delete('/pastes/:pastes_id/comment/:id', async (req,res) => {
   await client.query('delete from comments where paste_id = $1 and id = $2', [req.params.pastes_id, req.params.id])
+  res.set('Access-Control-Allow-Origin', '*')
   res.json({status: 'success'})
 });
 
