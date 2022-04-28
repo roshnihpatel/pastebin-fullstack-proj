@@ -36,7 +36,7 @@ app.get("/pastes", async (req, res) => {
 
 app.post("/pastes", async (req, res) => {
   await client.query('insert into pastebin (content, title, timestamp) values ($1, $2, now())', [req.body.content, req.body.title])
-  res.set('Access-Control-Allow_Origin', '*')
+  res.set('Access-Control-Allow-Origin', '*')
   res.json({status: 'success'})
 });
 
@@ -54,7 +54,7 @@ app.get('/pastes/:pastes_id/comment', async (req, res) => {
 
 app.post('/pastes/:pastes_id/comment', async (req, res) => {
   await client.query('insert into comments (paste_id, comment, timestamp) values ($1, $2, now())', [req.params.pastes_id, req.body.comment])
-  res.set('Access-Control-Allow_Origin', '*')
+  res.set('Access-Control-Allow-Origin', '*')
   res.json({status: 'success'})
 });
 
