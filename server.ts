@@ -21,6 +21,8 @@ const dbConfig = {
 
 const app = express();
 
+
+
 app.use(express.json()); //add body parser to each following route handler
 app.use(cors()) //add CORS support to each following route handler
 
@@ -34,13 +36,13 @@ app.get("/pastes", async (req, res) => {
 
 app.post("/pastes", async (req, res) => {
   await client.query('insert into pastebin (content, title, timestamp) values ($1, $2, now())', [req.body.content, req.body.title])
+  res.set('Access-Control-Allow_Origin', '*')
   res.json({status: 'success'})
 });
 
 app.delete("/pastes/:id", async (req, res) => {
   await client.query('delete from comments where paste_id = $1', [req.params.id])
   await client.query('delete from pastebin where id = $1', [req.params.id])
-  
   res.json({status: 'success'})
 })
 
@@ -52,6 +54,7 @@ app.get('/pastes/:pastes_id/comment', async (req, res) => {
 
 app.post('/pastes/:pastes_id/comment', async (req, res) => {
   await client.query('insert into comments (paste_id, comment, timestamp) values ($1, $2, now())', [req.params.pastes_id, req.body.comment])
+  res.set('Access-Control-Allow_Origin', '*')
   res.json({status: 'success'})
 });
 
